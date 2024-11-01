@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cyberpunk-themed login and registration system with neural link concept">
+    <title>Cyberpunk Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #000000, #1a1a1a);
+            color: #0ff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 255, 255, 0.1) 0px,
+                transparent 1px,
+                transparent 2px
+            );
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #0ff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            width: 400px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #0ff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #0ff;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #0ff;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input:focus {
+            border-bottom-color: #ff00ff;
+            box-shadow: 0 1px 0 0 #ff00ff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 2px solid #0ff;
+            color: #0ff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: #0ff;
+            color: #000;
+            box-shadow: 0 0 20px #0ff;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            background: rgba(0, 255, 255, 0.1);
+            transform: translate(-50%, -50%) scale(0);
+            border-radius: 50%;
+            transition: all 0.5s ease;
+        }
+
+        .btn:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .forgot-link {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .forgot-link a {
+            color: #ff00ff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-link a:hover {
+            color: #0ff;
+            text-shadow: 0 0 5px #0ff;
+        }
+
+        #signupForm, #forgotPasswordForm {
+            display: none;
+        }
+
+        .error {
+            color: #ff0055;
+            margin-top: 5px;
+            font-size: 14px;
+            text-shadow: 0 0 5px #ff0055;
+        }
+
+        .success {
+            color: #00ff9d;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            text-shadow: 0 0 5px #00ff9d;
+        }
+
+        label {
+            position: absolute;
+            left: 0;
+            top: 10px;
+            color: #0ff;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        input:focus ~ label,
+        input:valid ~ label {
+            top: -20px;
+            font-size: 12px;
+            color: #ff00ff;
+        }
+
+        .security-question {
+            margin-bottom: 15px;
+            color: #0ff;
+            font-size: 14px;
+        }
+
+        /* Media Queries for Responsiveness */
+        
+        /* Large Desktop Screens */
+        @media screen and (min-width: 1400px) {
+            .container {
+                width: 500px;
+                padding: 50px;
+            }
+
+            h2 {
+                font-size: 2.2em;
+            }
+
+            input, .btn {
+                font-size: 18px;
+            }
+        }
+
+        /* Standard Desktop and Laptop Screens */
+        @media screen and (max-width: 1399px) and (min-width: 1024px) {
+            .container {
+                width: 450px;
+                height:100vh;
+            }
+        }
+
+        /* Tablets and Small Laptops */
+        @media screen and (max-width: 1023px) and (min-width: 768px) {
+            .container {
+                width: 80%;
+                max-width: 400px;
+                padding: 30px;
+            }
+
+            h2 {
+                font-size: 1.8em;
+                margin-bottom: 25px;
+            }
+        }
+
+        /* Large Mobile Devices */
+        @media screen and (max-width: 767px) and (min-width: 481px) {
+            .container {
+                width: 90%;
+                padding: 25px;
+                margin: 20px;
+            }
+
+            h2 {
+                font-size: 1.6em;
+                margin-bottom: 20px;
+                letter-spacing: 2px;
+            }
+
+            .btn {
+                padding: 10px;
+                font-size: 14px;
+                letter-spacing: 1px;
+            }
+        }
+
+        /* Small Mobile Devices */
+        @media screen and (max-width: 480px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+                margin: 10px;
+                border-radius: 10px;
+            }
+
+            h2 {
+                font-size: 1.4em;
+                margin-bottom: 20px;
+                letter-spacing: 1px;
+            }
+
+            input {
+                font-size: 14px;
+            }
+
+            .btn {
+                padding: 8px;
+                font-size: 13px;
+                letter-spacing: 1px;
+                margin-top: 15px;
+            }
+
+            label {
+                font-size: 14px;
+            }
+
+            .forgot-link a {
+                font-size: 12px;
+            }
+
+            .error, .success {
+                font-size: 13px;
+            }
+        }
+
+        /* Landscape Mode for Mobile Devices */
+        @media screen and (max-height: 480px) and (orientation: landscape) {
+            body {
+                padding: 20px 0;
+            }
+
+            .container {
+                margin: 10px auto;
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 1.4em;
+                margin-bottom: 15px;
+            }
+
+            .input-group {
+                margin-bottom: 15px;
+            }
+
+            .btn {
+                margin-top: 10px;
+            }
+        }
+
+        /* Support for Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(45deg, #000000, #1a1a1a);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="loginForm">
+        <h2>Neural Login</h2>
+        <form onsubmit="return handleLogin(event)">
+            <div class="input-group">
+                <input type="email" id="loginEmail" required>
+                <label for="loginEmail">Neural ID (Email)</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="loginPassword" required>
+                <label for="loginPassword">Access Key</label>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <button type="button" class="btn" onclick="showSignup()">Create New Account</button>
+            <div class="forgot-link">
+                <a href="#" onclick="showForgotPassword()">Forget Password</a>
+            </div>
+        </form>
+        <div id="loginMessage"></div>
+    </div>
+
+    <div class="container" id="signupForm">
+        <h2>Neural Link Registration</h2>
+        <form onsubmit="return handleSignup(event)">
+            <div class="input-group">
+                <input type="email" id="signupEmail" required>
+                <label for="signupEmail">Neural ID (Email)</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="signupPassword" required>
+                <label for="signupPassword">Create Access Key</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="signupConfirmPassword" required>
+                <label for="signupConfirmPassword">Confirm Access Key</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="securityQuestion1" required>
+                <label for="securityQuestion1">First Pet's Name</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="securityQuestion2" required>
+                <label for="securityQuestion2">City of Birth</label>
+            </div>
+            <button type="submit" class="btn">Create Account</button>
+            <button type="button" class="btn" onclick="showLogin()">Existing Account</button>
+        </form>
+        <div id="signupMessage"></div>
+    </div>
+
+    <div class="container" id="forgotPasswordForm">
+        <h2>Neural Link Recovery</h2>
+        <form onsubmit="return handleForgotPassword(event)">
+            <div class="input-group">
+                <input type="email" id="recoveryEmail" required>
+                <label for="recoveryEmail">Neural ID (Email)</label>
+            </div>
+            <div class="security-question">Security Verification Required:</div>
+            <div class="input-group">
+                <input type="text" id="recoveryAnswer1" required>
+                <label for="recoveryAnswer1">First Pet's Name</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="recoveryAnswer2" required>
+                <label for="recoveryAnswer2">City of Birth</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="newPassword" required>
+                <label for="newPassword">New Access Key</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="confirmNewPassword" required>
+                <label for="confirmNewPassword">Confirm New Access Key</label>
+            </div>
+            <button type="submit" class="btn">Change Password</button>
+            <button type="button" class="btn" onclick="showLogin()">Return to Login</button>
+        </form>
+        <div id="forgotPasswordMessage"></div>
+    </div>
+
+    <script>
+        function showSignup() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'none';
+        }
+
+        function showForgotPassword() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('forgotPasswordForm').style.display = 'block';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const messageDiv = document.getElementById('loginMessage');
+
+            const userData = JSON.parse(localStorage.getItem(email));
+
+            if (!userData) {
+                messageDiv.innerHTML = '<div class="error">Neural link not found. Please register first.</div>';
+                setTimeout(showSignup, 2000);
+                return false;
+            }
+
+            if (userData.password !== password) {
+                messageDiv.innerHTML = '<div class="error">Invalid access key. Please try again.</div>';
+                return false;
+            }
+
+            messageDiv.innerHTML = '<div class="success">Neural link established. Welcome back to the network.</div>';
+            return false;
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const securityQuestion1 = document.getElementById('securityQuestion1').value;
+            const securityQuestion2 = document.getElementById('securityQuestion2').value;
+            const messageDiv = document.getElementById('signupMessage');
+
+            if (password !== confirmPassword) {
+                messageDiv.innerHTML = '<div class="error">Error: Access key mismatch detected</div>';
+                return false;
+            }
+
+            const userData = {
+                password: password,
+                securityQuestion1: securityQuestion1,
+                securityQuestion2: securityQuestion2
+            };
+
+            localStorage.setItem(email, JSON.stringify(userData));
+            messageDiv.innerHTML = '<div class="success">Neural link established. Redirecting to login...</div>';
+            setTimeout(showLogin, 2000);
+            return false;
+        }
+
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            const email = document.getElementById('recoveryEmail').value;
+            const answer1 = document.getElementById('recoveryAnswer1').value;
+            const answer2 = document.getElementById('recoveryAnswer2').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            const messageDiv = document.getElementById('forgotPasswordMessage');
+
+            const userData = JSON.parse(localStorage.getItem(email));
+
+            if (!userData) {
+                messageDiv.innerHTML = '<div class="error">Neural link not found. Please register first.</div>';
+                return false;
+            }
+
+            if (userData.securityQuestion1 !== answer1 || userData.securityQuestion2 !== answer2) {
+                messageDiv.innerHTML = '<div class="error">Security verification failed. Please try again.</div>';
+                return false;
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                messageDiv.innerHTML = '<div class="error">New access keys do not match.</div>';
+                return false;
+            }
+
+            userData.password = newPassword;
+            localStorage.setItem(email, JSON.stringify(userData));
+            messageDiv.innerHTML = '<div class="success">Neural link reset successful. Redirecting to login...</div>';
+            setTimeout(showLogin, 2000);
+            return false;
+        }
+    </script>
+</body>
+</html>
